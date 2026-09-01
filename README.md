@@ -1,4 +1,4 @@
-# Marketing Attribution Lab — grading attribution models against known truth
+# Marketing Attribution Reality Check | Five models graded against known truth
 
 The attribution debate (last-click vs everything else) is usually
 unresolvable because true channel incrementality is unobservable. This lab

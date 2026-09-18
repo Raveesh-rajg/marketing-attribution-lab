@@ -1,45 +1,48 @@
-# Marketing Attribution Reality Check | Five models graded against known truth
+# Marketing Attribution Lab
 
-The attribution debate (last-click vs everything else) is usually
-unresolvable because true channel incrementality is unobservable. This lab
-makes it observable: a 60k-user journey generator plants each channel's
-TRUE incremental lift, then five attribution models are graded against
-that ground truth. The result quantifies exactly how much money last-click
-misallocates and why.
+Compare five attribution methods against known channel effects in a seeded journey simulation.
 
-## Measured scoreboard (seeded, pinned by 5 tests)
+## Implementation and validation
 
+Local attribution implementations and five tests pass. No external service required.
+
+Automated checks: **5 tests**. The GitHub Actions run linked above the file browser is the current CI result. Local checks and external integrations are separate claims.
+
+## Reproduce locally
+
+Use Python 3.12. Run from this repository’s root in a fresh virtual environment.
+
+```sh
+python -m venv .venv
+# Activate .venv for your shell, then:
+python -m pip install -r requirements.txt
 ```
-model            MAE vs truth   paid_search share (truth = 14.3%)
-removal_effect      0.038            19.1%
-linear              0.046            23.4%
-position_based      0.051            24.8%
-first_click         0.092            13.2%
-last_click          0.098            38.8%   <- 2.7x over-credited
+
+For repositories using `src/`, set the import path before running commands:
+
+```powershell
+# PowerShell
+$env:PYTHONPATH="src"
+```
+```sh
+# macOS/Linux
+export PYTHONPATH=src
 ```
 
-The planted mechanism (which mirrors the real one): display and social
-START journeys and genuinely raise conversion; paid search harvests the
-final click on journeys other channels created. Last-click pays the
-harvester — display gets 9.6% credit against 20.4% truth. A budget
-reallocated on last-click numbers would cut the channels doing the work.
-
-## What each model actually answers
-
-Heuristics (last/first/linear/position) allocate CREDIT for observed
-conversions — an accounting exercise. The removal-effect model (logistic
-conversion model over channel presence; contribution = predicted
-conversions lost when a channel is zeroed) estimates INCREMENTALITY — the
-budget question. They are different questions; the scoreboard shows the
-cost of confusing them. And the honest ceiling: even removal-effect is
-observational — the gold standard is geo holdouts / lift tests, i.e. the
-experiments in the sibling ab-testing-framework and causal-inference
-projects. This lab is the bridge between "credit rules" and "causal spend
-decisions."
-
-## Run
-```bash
-pip install pandas numpy scikit-learn pytest
-PYTHONPATH=src python src/attribution/generate.py
-PYTHONPATH=src pytest tests/ -q     # 5 tests
+```sh
+python -m pytest tests -q
 ```
+
+## Data and interpretation
+
+Synthetic journeys with planted effects. Attribution credit is not proof of real-world incrementality; holdout experiments remain the validation method for actual budget decisions.
+
+## Inspect the work
+
+- [`tests/`](tests/) — executable checks and examples.
+- [`docs/`](docs/) — methodology, integration specifications and the historical design.
+- [Portfolio](https://raveesh-rajg.github.io/) — project directory.
+
+## Completion boundary
+
+Passing local tests establishes the checks listed in this repository. It does not establish cloud deployment, real-data quality, production security, or native BI rendering unless an explicit verification record says so.
